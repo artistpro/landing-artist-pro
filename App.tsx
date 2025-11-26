@@ -5,6 +5,8 @@ import Services from './components/Services';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 
+import RadioSection from './components/RadioSection';
+
 function App() {
   return (
     <div className="min-h-screen bg-[#030712] text-white selection:bg-primary selection:text-white">
@@ -12,6 +14,8 @@ function App() {
       <main>
         <Hero />
         <Services />
+
+        <RadioSection />
 
         {/* About / Value Prop Snippet */}
         <section id="about" className="py-20 bg-gradient-to-b from-[#030712] to-gray-900 border-y border-gray-800">
