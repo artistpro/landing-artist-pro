@@ -10,6 +10,7 @@ const RadioSection: React.FC = () => {
 
     // Using proxy to avoid mixed content issues (HTTP stream on HTTPS site)
     const STREAM_URL = "/api/radio-stream";
+    const DIRECT_STREAM = "http://195.26.251.31/listen/radioartistpro/radio.mp3";
 
     const togglePlay = () => {
         if (!audioRef.current) return;
@@ -27,7 +28,7 @@ const RadioSection: React.FC = () => {
                     })
                     .catch(err => {
                         console.error("Playback failed:", err);
-                        setError("No se pudo reproducir. Intenta recargar la página.");
+                        setError("No se pudo reproducir. El servidor de streaming podría estar temporalmente fuera de línea.");
                         setIsPlaying(false);
                     });
             }
@@ -129,7 +130,17 @@ const RadioSection: React.FC = () => {
 
                             {error && (
                                 <div className="mt-6 p-3 bg-red-900/20 border border-red-900/50 rounded-lg text-red-200 text-sm text-center md:text-left">
-                                    {error}
+                                    <p className="mb-2">{error}</p>
+                                    <p className="text-xs text-gray-400">
+                                        <a
+                                            href={DIRECT_STREAM}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="underline hover:text-gray-200"
+                                        >
+                                            Intenta abrir el stream directamente
+                                        </a>
+                                    </p>
                                 </div>
                             )}
                         </div>
