@@ -20,3 +20,14 @@ export interface ContactInfo {
   phoneDisplay: string;
   email?: string;
 }
+
+export interface Course {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  link: string;
+  image: string;
+  features?: string[];
+  faq?: { question: string; answer: string }[];
+}

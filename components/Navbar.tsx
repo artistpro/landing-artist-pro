@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X, Music } from 'lucide-react';
 import { COMPANY_NAME } from '../constants';
 
@@ -19,10 +20,11 @@ const Navbar: React.FC = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Inicio', href: '#home' },
-    { name: 'Servicios', href: '#services' },
-    { name: 'Nosotros', href: '#about' },
-    { name: 'Contacto', href: '#contact' },
+    { name: 'Inicio', href: '/' },
+    { name: 'Servicios', href: '/#services' },
+    { name: 'Cursos', href: '/cursos' },
+    { name: 'Nosotros', href: '/#about' },
+    { name: 'Contacto', href: '/#contact' },
   ];
 
   return (
@@ -30,26 +32,26 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+          <Link to="/" className="flex-shrink-0 flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
             <div className="bg-gradient-to-tr from-primary to-secondary p-2 rounded-lg">
               <Music className="h-6 w-6 text-white" />
             </div>
             <span className="font-bold text-2xl tracking-tighter text-white">
               {COMPANY_NAME}
             </span>
-          </div>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
               <a
                 href="#contact"
@@ -76,19 +78,19 @@ const Navbar: React.FC = () => {
       <div className={`md:hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden bg-black/95 backdrop-blur-xl`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-800">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
-              href={link.href}
+              to={link.href}
               onClick={() => setIsOpen(false)}
               className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               {link.name}
-            </a>
+            </Link>
           ))}
           <a
-             href="#contact"
-             onClick={() => setIsOpen(false)}
-             className="w-full text-center mt-4 block bg-primary text-white px-3 py-3 rounded-md font-bold"
+            href="#contact"
+            onClick={() => setIsOpen(false)}
+            className="w-full text-center mt-4 block bg-primary text-white px-3 py-3 rounded-md font-bold"
           >
             Empezar Proyecto
           </a>
