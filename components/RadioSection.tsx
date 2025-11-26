@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import Section from './ui/Section';
 
@@ -8,8 +8,8 @@ const RadioSection: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    // Note: This is an HTTP stream. Browsers might block it on HTTPS sites (Mixed Content).
-    const STREAM_URL = "http://195.26.251.31/listen/radioartistpro/radio.mp3";
+    // Using proxy to avoid mixed content issues (HTTP stream on HTTPS site)
+    const STREAM_URL = "/api/radio-stream";
 
     const togglePlay = () => {
         if (!audioRef.current) return;
@@ -27,8 +27,7 @@ const RadioSection: React.FC = () => {
                     })
                     .catch(err => {
                         console.error("Playback failed:", err);
-                        // Check if it's a mixed content error or similar
-                        setError("No se pudo reproducir. Es posible que el navegador bloquee la señal por seguridad (Mixed Content).");
+                        setError("No se pudo reproducir. Intenta recargar la página.");
                         setIsPlaying(false);
                     });
             }
@@ -136,15 +135,9 @@ const RadioSection: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
-                <div className="mt-8 text-center">
-                    <p className="text-gray-500 text-xs">
-                        Si no escuchas el audio, <a href={STREAM_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-300">haz clic aquí para abrir el stream externo</a>.
-                    </p>
-                </div>
             </div>
 
-            <audio ref={audioRef} src={STREAM_URL} preload="none" crossOrigin="anonymous" />
+            <audio ref={audioRef} src={STREAM_URL} preload="none" />
         </Section>
     );
 };
