@@ -8,9 +8,9 @@ const RadioSection: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    // Using proxy to avoid mixed content issues (HTTP stream on HTTPS site)
-    const STREAM_URL = "/api/radio-stream";
-    const DIRECT_STREAM = "http://195.26.251.31/listen/radioartistpro/radio.mp3";
+    // Direct stream URL - browsers may show mixed content warning but will work
+    const STREAM_URL = "http://195.26.251.31/listen/radioartistpro/radio.mp3";
+    const DIRECT_STREAM = STREAM_URL;
 
     const togglePlay = () => {
         if (!audioRef.current) return;
@@ -148,7 +148,7 @@ const RadioSection: React.FC = () => {
                 </div>
             </div>
 
-            <audio ref={audioRef} src={STREAM_URL} preload="none" />
+            <audio ref={audioRef} src={STREAM_URL} preload="none" crossOrigin="anonymous" />
         </Section>
     );
 };
