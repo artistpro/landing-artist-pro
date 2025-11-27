@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Music } from 'lucide-react';
 import { COMPANY_NAME } from '../constants';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,12 +21,49 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Handle hash navigation for scrolling to sections
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+  }, [location]);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/#')) {
+      e.preventDefault();
+      const sectionId = href.substring(2); // Remove '/#'
+
+      // If we're not on home page, navigate to home first
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      } else {
+        // Already on home page, just scroll
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+      setIsOpen(false);
+    }
+  };
+
   const navLinks = [
-    { name: 'Inicio', href: '/' },
-    { name: 'Servicios', href: '/#services' },
-    { name: 'Cursos', href: '/cursos' },
-    { name: 'Nosotros', href: '/#about' },
-    { name: 'Contacto', href: '/#contact' },
+    { name: 'Inicio', href: '/', isRoute: true },
+    { name: 'Servicios', href: '/#services', isRoute: false },
+    { name: 'Cursos', href: '/cursos', isRoute: true },
+    { name: 'Nosotros', href: '/#about', isRoute: false },
+    { name: 'Contacto', href: '/#contact', isRoute: false },
   ];
 
   return (
@@ -45,13 +84,24 @@ const Navbar: React.FC = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  {link.name}
-                </Link>
+                link.isRoute ? (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  >
+                    {link.name}
+                  </a>
+                )
               ))}
               <a
                 href="#contact"
@@ -78,14 +128,28 @@ const Navbar: React.FC = () => {
       <div className={`md:hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden bg-black/95 backdrop-blur-xl`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-800">
           {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.href}
-              onClick={() => setIsOpen(false)}
-              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              {link.name}
-            </Link>
+            link.isRoute ? (
+              <Link
+                key={link.name}
+                to={link.href}
+                onClick={() => setIsOpen(false)}
+                className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >
+                {link.name}
+              </Link>
+            ) : (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => {
+                  handleNavClick(e, link.href);
+                  setIsOpen(false);
+                }}
+                className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >
+                {link.name}
+              </a>
+            )
           ))}
           <a
             href="#contact"
