@@ -3,6 +3,9 @@ export const config = {
 };
 
 export default async function handler(request: Request) {
+    // Log request for debugging purposes and to avoid unused variable error
+    console.log(`Incoming request to proxy: ${request.url}`);
+
     const STREAM_URL = 'http://195.26.251.31/listen/radioartistpro/radio.mp3';
 
     try {
