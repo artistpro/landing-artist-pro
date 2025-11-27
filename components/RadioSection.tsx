@@ -9,9 +9,11 @@ const RadioSection: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    // Using HTTPS proxy - CORS is now enabled in AzuraCast
-    const STREAM_URL = "/api/radio-stream";
-    const DIRECT_STREAM = "http://195.26.251.31/listen/radioartistpro/radio.mp3";
+    // Vercel Edge Proxy (HTTPS) -> AzuraCast (HTTP)
+    const PROXY_URL = "/api/radio-stream";
+
+    // Direct Stream (Fallback)
+    const DIRECT_URL = "http://195.26.251.31/listen/radioartistpro/radio.mp3";
 
     const togglePlay = async () => {
         if (!audioRef.current) return;
@@ -25,27 +27,40 @@ const RadioSection: React.FC = () => {
             setIsLoading(true);
 
             try {
-                // Force reload if stream was disconnected
-                if (audioRef.current.networkState === HTMLMediaElement.NETWORK_NO_SOURCE ||
-                    audioRef.current.networkState === HTMLMediaElement.NETWORK_EMPTY) {
-                    audioRef.current.load();
+                // Reset source to ensure fresh connection via proxy first
+                if (!audioRef.current.src || audioRef.current.src === window.location.href) {
+                    audioRef.current.src = PROXY_URL;
                 }
 
+                audioRef.current.load();
                 const playPromise = audioRef.current.play();
 
-                // Set a timeout to abort loading if it takes too long
+                // Timeout de seguridad de 10s
                 const timeoutPromise = new Promise((_, reject) => {
-                    setTimeout(() => reject(new Error("Timeout: La radio tardó demasiado en responder")), 15000);
+                    setTimeout(() => reject(new Error("Timeout")), 10000);
                 });
 
                 await Promise.race([playPromise, timeoutPromise]);
-                setIsPlaying(true);
+                // Si llegamos aquí, el navegador aceptó la intención de reproducir
             } catch (err) {
-                console.error("Playback failed:", err);
-                setError("La conexión es inestable o bloqueada por el navegador.");
-                setIsPlaying(false);
-            } finally {
-                setIsLoading(false);
+                console.error("Playback start failed:", err);
+
+                // Si falla el proxy, intentamos directo (último recurso)
+                // Esto podría funcionar si el usuario tiene una extensión o configuración permisiva
+                if (audioRef.current.src.includes('api/radio-stream')) {
+                    console.log("Proxy failed, trying direct stream...");
+                    audioRef.current.src = DIRECT_URL;
+                    try {
+                        await audioRef.current.play();
+                    } catch (e) {
+                        console.error("Direct stream failed:", e);
+                        setError("No se pudo conectar. Verifica tu conexión.");
+                        setIsLoading(false);
+                    }
+                } else {
+                    setError("No se pudo reproducir la radio.");
+                    setIsLoading(false);
+                }
             }
         }
     };
@@ -60,26 +75,34 @@ const RadioSection: React.FC = () => {
         const audio = audioRef.current;
         if (!audio) return;
 
-        const handleWaiting = () => setIsLoading(true);
-        const handlePlaying = () => {
+        const onWaiting = () => setIsLoading(true);
+        const onPlaying = () => {
             setIsLoading(false);
             setIsPlaying(true);
+            setError(null);
         };
-        const handleError = (e: any) => {
-            console.error("Audio error:", e);
-            setError("Error de conexión con la radio.");
-            setIsPlaying(false);
-            setIsLoading(false);
+        const onPause = () => setIsPlaying(false);
+        const onError = (e: any) => {
+            console.error("Audio Error Event:", e);
+            // No mostramos error inmediatamente en UI, dejamos que el catch del togglePlay maneje el retry
+            // Solo si estaba reproduciendo y falla de repente
+            if (isPlaying) {
+                setIsPlaying(false);
+                setIsLoading(false);
+                setError("Se perdió la conexión.");
+            }
         };
 
-        audio.addEventListener('waiting', handleWaiting);
-        audio.addEventListener('playing', handlePlaying);
-        audio.addEventListener('error', handleError);
+        audio.addEventListener('waiting', onWaiting);
+        audio.addEventListener('playing', onPlaying);
+        audio.addEventListener('pause', onPause);
+        audio.addEventListener('error', onError);
 
         return () => {
-            audio.removeEventListener('waiting', handleWaiting);
-            audio.removeEventListener('playing', handlePlaying);
-            audio.removeEventListener('error', handleError);
+            audio.removeEventListener('waiting', onWaiting);
+            audio.removeEventListener('playing', onPlaying);
+            audio.removeEventListener('pause', onPause);
+            audio.removeEventListener('error', onError);
         };
     }, []);
 
@@ -109,7 +132,7 @@ const RadioSection: React.FC = () => {
 
                         {/* Logo & Visualizer */}
                         <div className="relative mx-auto md:mx-0">
-                            <div className={`w-48 h-48 md:w-56 md:h-56 rounded-full bg-black border-4 border-gray-800 flex items-center justify-center shadow-2xl relative ${isPlaying ? 'animate-[spin_10s_linear_infinite]' : ''}`}>
+                            <div className={`w-48 h-48 md:w-56 md:h-56 rounded-full bg-black border-4 border-gray-800 flex items-center justify-center shadow-2xl relative transition-all duration-1000 ${isPlaying ? 'animate-[spin_4s_linear_infinite] shadow-cyan-500/20' : ''}`}>
                                 <img
                                     src="/radio-logo.png"
                                     alt="Artist Pro Radio"
@@ -122,8 +145,8 @@ const RadioSection: React.FC = () => {
                             {/* Sound waves animation when playing */}
                             {isPlaying && (
                                 <>
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-full border border-cyan-500/30 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] rounded-full border border-blue-500/20 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]" style={{ animationDelay: '0.5s' }}></div>
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-full border border-cyan-500/30 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] rounded-full border border-blue-500/20 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite]" style={{ animationDelay: '0.5s' }}></div>
                                 </>
                             )}
                         </div>
@@ -131,9 +154,11 @@ const RadioSection: React.FC = () => {
                         {/* Controls */}
                         <div className="flex-1 w-full text-center md:text-left">
                             <div className="flex items-center justify-center md:justify-start gap-3 mb-6">
-                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20">
-                                    <div className={`w-2 h-2 rounded-full bg-red-500 ${isPlaying ? 'animate-pulse' : ''}`}></div>
-                                    <span className="text-red-400 text-xs font-bold tracking-wider uppercase">En Vivo</span>
+                                <div className={`flex items-center gap-2 px-3 py-1 rounded-full border transition-colors ${isPlaying ? 'bg-red-500/10 border-red-500/20' : 'bg-gray-800/50 border-gray-700'}`}>
+                                    <div className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-red-500 animate-pulse' : 'bg-gray-500'}`}></div>
+                                    <span className={`${isPlaying ? 'text-red-400' : 'text-gray-400'} text-xs font-bold tracking-wider uppercase`}>
+                                        {isPlaying ? 'En Vivo' : 'Offline'}
+                                    </span>
                                 </div>
                                 <span className="text-gray-500 text-sm font-mono">128kbps</span>
                             </div>
@@ -166,10 +191,10 @@ const RadioSection: React.FC = () => {
 
                             {error && (
                                 <div className="mt-6 p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-red-200 text-sm text-center md:text-left animate-in fade-in slide-in-from-top-2">
-                                    <p className="font-semibold mb-1">⚠️ No se pudo conectar con la radio</p>
+                                    <p className="font-semibold mb-1">⚠️ Problema de conexión</p>
                                     <p className="mb-3 opacity-80">{error}</p>
                                     <button
-                                        onClick={() => window.open(DIRECT_STREAM, 'RadioArtistPro', 'width=400,height=300')}
+                                        onClick={() => window.open(DIRECT_URL, 'RadioArtistPro', 'width=400,height=300')}
                                         className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full text-sm font-bold hover:bg-gray-200 transition-colors"
                                     >
                                         <Play className="w-4 h-4" />
@@ -184,7 +209,6 @@ const RadioSection: React.FC = () => {
 
             <audio
                 ref={audioRef}
-                src={STREAM_URL}
                 preload="none"
                 crossOrigin="anonymous"
             />
