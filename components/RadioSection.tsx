@@ -4,6 +4,7 @@ import Section from './ui/Section';
 
 const RadioSection: React.FC = () => {
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
@@ -12,25 +13,39 @@ const RadioSection: React.FC = () => {
     const STREAM_URL = "/api/radio-stream";
     const DIRECT_STREAM = "http://195.26.251.31/listen/radioartistpro/radio.mp3";
 
-    const togglePlay = () => {
+    const togglePlay = async () => {
         if (!audioRef.current) return;
 
         if (isPlaying) {
             audioRef.current.pause();
             setIsPlaying(false);
+            setIsLoading(false);
         } else {
             setError(null);
-            const playPromise = audioRef.current.play();
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                        setIsPlaying(true);
-                    })
-                    .catch(err => {
-                        console.error("Playback failed:", err);
-                        setError("No se pudo reproducir. El servidor de streaming podría estar temporalmente fuera de línea.");
-                        setIsPlaying(false);
-                    });
+            setIsLoading(true);
+
+            try {
+                // Force reload if stream was disconnected
+                if (audioRef.current.networkState === HTMLMediaElement.NETWORK_NO_SOURCE ||
+                    audioRef.current.networkState === HTMLMediaElement.NETWORK_EMPTY) {
+                    audioRef.current.load();
+                }
+
+                const playPromise = audioRef.current.play();
+
+                // Set a timeout to abort loading if it takes too long
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error("Timeout: La radio tardó demasiado en responder")), 15000);
+                });
+
+                await Promise.race([playPromise, timeoutPromise]);
+                setIsPlaying(true);
+            } catch (err) {
+                console.error("Playback failed:", err);
+                setError("La conexión es inestable o bloqueada por el navegador.");
+                setIsPlaying(false);
+            } finally {
+                setIsLoading(false);
             }
         }
     };
@@ -45,13 +60,27 @@ const RadioSection: React.FC = () => {
         const audio = audioRef.current;
         if (!audio) return;
 
-        const handleError = () => {
+        const handleWaiting = () => setIsLoading(true);
+        const handlePlaying = () => {
+            setIsLoading(false);
+            setIsPlaying(true);
+        };
+        const handleError = (e: any) => {
+            console.error("Audio error:", e);
             setError("Error de conexión con la radio.");
             setIsPlaying(false);
+            setIsLoading(false);
         };
 
+        audio.addEventListener('waiting', handleWaiting);
+        audio.addEventListener('playing', handlePlaying);
         audio.addEventListener('error', handleError);
-        return () => audio.removeEventListener('error', handleError);
+
+        return () => {
+            audio.removeEventListener('waiting', handleWaiting);
+            audio.removeEventListener('playing', handlePlaying);
+            audio.removeEventListener('error', handleError);
+        };
     }, []);
 
     return (
@@ -115,9 +144,16 @@ const RadioSection: React.FC = () => {
                             <div className="flex items-center justify-center md:justify-start gap-6">
                                 <button
                                     onClick={togglePlay}
-                                    className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg shadow-white/10"
+                                    disabled={isLoading}
+                                    className={`w-16 h-16 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg shadow-white/10 ${isLoading ? 'opacity-70 cursor-wait' : ''}`}
                                 >
-                                    {isPlaying ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current ml-1" />}
+                                    {isLoading ? (
+                                        <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                                    ) : isPlaying ? (
+                                        <Pause className="w-6 h-6 fill-current" />
+                                    ) : (
+                                        <Play className="w-6 h-6 fill-current ml-1" />
+                                    )}
                                 </button>
 
                                 <button
@@ -129,18 +165,16 @@ const RadioSection: React.FC = () => {
                             </div>
 
                             {error && (
-                                <div className="mt-6 p-3 bg-red-900/20 border border-red-900/50 rounded-lg text-red-200 text-sm text-center md:text-left">
-                                    <p className="mb-2">{error}</p>
-                                    <p className="text-xs text-gray-400">
-                                        <a
-                                            href={DIRECT_STREAM}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="underline hover:text-gray-200"
-                                        >
-                                            Intenta abrir el stream directamente
-                                        </a>
-                                    </p>
+                                <div className="mt-6 p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-red-200 text-sm text-center md:text-left animate-in fade-in slide-in-from-top-2">
+                                    <p className="font-semibold mb-1">⚠️ No se pudo conectar con la radio</p>
+                                    <p className="mb-3 opacity-80">{error}</p>
+                                    <button
+                                        onClick={() => window.open(DIRECT_STREAM, 'RadioArtistPro', 'width=400,height=300')}
+                                        className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full text-sm font-bold hover:bg-gray-200 transition-colors"
+                                    >
+                                        <Play className="w-4 h-4" />
+                                        Abrir Reproductor Externo
+                                    </button>
                                 </div>
                             )}
                         </div>
@@ -148,7 +182,12 @@ const RadioSection: React.FC = () => {
                 </div>
             </div>
 
-            <audio ref={audioRef} src={STREAM_URL} preload="none" />
+            <audio
+                ref={audioRef}
+                src={STREAM_URL}
+                preload="none"
+                crossOrigin="anonymous"
+            />
         </Section>
     );
 };
