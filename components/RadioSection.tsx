@@ -9,11 +9,11 @@ const RadioSection: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    // Vercel Edge Proxy (HTTPS) -> AzuraCast (HTTP)
-    const PROXY_URL = "/api/radio-stream";
+    // URL Segura Directa (HTTPS) - Fuente Principal
+    const STREAM_URL = "https://radio.artistpro.co/listen/radioartistpro/radio.mp3";
 
-    // Direct Stream (Fallback)
-    const DIRECT_URL = "http://195.26.251.31/listen/radioartistpro/radio.mp3";
+    // Proxy Vercel (Fallback por si falla la directa)
+    const PROXY_URL = "/api/radio-stream";
 
     const togglePlay = async () => {
         if (!audioRef.current) return;
@@ -27,9 +27,9 @@ const RadioSection: React.FC = () => {
             setIsLoading(true);
 
             try {
-                // Reset source to ensure fresh connection via proxy first
-                if (!audioRef.current.src || audioRef.current.src === window.location.href) {
-                    audioRef.current.src = PROXY_URL;
+                // Intentamos primero con la URL directa segura
+                if (!audioRef.current.src || audioRef.current.src !== STREAM_URL) {
+                    audioRef.current.src = STREAM_URL;
                 }
 
                 audioRef.current.load();
@@ -41,19 +41,18 @@ const RadioSection: React.FC = () => {
                 });
 
                 await Promise.race([playPromise, timeoutPromise]);
-                // Si llegamos aquí, el navegador aceptó la intención de reproducir
+                // Si llegamos aquí, funcionó
             } catch (err) {
-                console.error("Playback start failed:", err);
+                console.error("Direct stream failed:", err);
 
-                // Si falla el proxy, intentamos directo (último recurso)
-                // Esto podría funcionar si el usuario tiene una extensión o configuración permisiva
-                if (audioRef.current.src.includes('api/radio-stream')) {
-                    console.log("Proxy failed, trying direct stream...");
-                    audioRef.current.src = DIRECT_URL;
+                // Si falla la directa, intentamos el Proxy
+                console.log("Trying proxy fallback...");
+                if (audioRef.current.src !== window.location.origin + PROXY_URL) {
+                    audioRef.current.src = PROXY_URL;
                     try {
                         await audioRef.current.play();
                     } catch (e) {
-                        console.error("Direct stream failed:", e);
+                        console.error("Proxy failed:", e);
                         setError("No se pudo conectar. Verifica tu conexión.");
                         setIsLoading(false);
                     }
@@ -84,8 +83,6 @@ const RadioSection: React.FC = () => {
         const onPause = () => setIsPlaying(false);
         const onError = (e: any) => {
             console.error("Audio Error Event:", e);
-            // No mostramos error inmediatamente en UI, dejamos que el catch del togglePlay maneje el retry
-            // Solo si estaba reproduciendo y falla de repente
             if (isPlaying) {
                 setIsPlaying(false);
                 setIsLoading(false);
@@ -194,7 +191,7 @@ const RadioSection: React.FC = () => {
                                     <p className="font-semibold mb-1">⚠️ Problema de conexión</p>
                                     <p className="mb-3 opacity-80">{error}</p>
                                     <button
-                                        onClick={() => window.open(DIRECT_URL, 'RadioArtistPro', 'width=400,height=300')}
+                                        onClick={() => window.open(STREAM_URL, 'RadioArtistPro', 'width=400,height=300')}
                                         className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full text-sm font-bold hover:bg-gray-200 transition-colors"
                                     >
                                         <Play className="w-4 h-4" />
