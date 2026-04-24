@@ -20,6 +20,8 @@ const RadioSection: React.FC = () => {
 
         if (isPlaying) {
             audioRef.current.pause();
+            audioRef.current.removeAttribute('src');
+            audioRef.current.load();
             setIsPlaying(false);
             setIsLoading(false);
         } else {
