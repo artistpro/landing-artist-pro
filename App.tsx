@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -6,15 +7,23 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import RadioSection from './components/RadioSection';
 import Gallery from './components/Gallery';
-import Courses from './src/pages/Courses';
-import CourseDetail from './src/pages/CourseDetail';
-import Blog from './src/pages/Blog';
-import BlogPost from './src/pages/BlogPost';
-import AdminLogin from './src/pages/admin/Login';
-import AdminDashboard from './src/pages/admin/Dashboard';
-import ArticleEditor from './src/pages/admin/ArticleEditor';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+
+// Lazy loaded page components for optimal performance & fast initial load
+const Courses = lazy(() => import('./src/pages/Courses'));
+const CourseDetail = lazy(() => import('./src/pages/CourseDetail'));
+const Blog = lazy(() => import('./src/pages/Blog'));
+const BlogPost = lazy(() => import('./src/pages/BlogPost'));
+const AdminLogin = lazy(() => import('./src/pages/admin/Login'));
+const AdminDashboard = lazy(() => import('./src/pages/admin/Dashboard'));
+const ArticleEditor = lazy(() => import('./src/pages/admin/ArticleEditor'));
+
+const PageLoader = () => (
+  <div className="min-h-screen bg-[#030712] flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 function Home() {
   return (
@@ -47,40 +56,42 @@ function App() {
       <Router>
         <div className="min-h-screen bg-[#030712] text-white selection:bg-primary selection:text-white">
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/cursos" element={<Courses />} />
-            <Route path="/cursos/:id" element={<CourseDetail />} />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/cursos" element={<Courses />} />
+              <Route path="/cursos/:id" element={<CourseDetail />} />
 
-            {/* Admin Routes */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/nuevo"
-              element={
-                <ProtectedRoute>
-                  <ArticleEditor />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/editar/:id"
-              element={
-                <ProtectedRoute>
-                  <ArticleEditor />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+              {/* Admin Routes */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/nuevo"
+                element={
+                  <ProtectedRoute>
+                    <ArticleEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/editar/:id"
+                element={
+                  <ProtectedRoute>
+                    <ArticleEditor />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </Suspense>
           <Footer />
         </div>
       </Router>
