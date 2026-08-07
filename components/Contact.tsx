@@ -1,10 +1,31 @@
-import React from 'react';
-import { MessageCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { MessageCircle, Copy, Check } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import Section from './ui/Section';
 
+const EMAIL = 'contacto@artistpro.co';
+
 const Contact: React.FC = () => {
   const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsapp}`;
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // fallback para browsers sin clipboard API
+      const el = document.createElement('textarea');
+      el.value = EMAIL;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
 
   return (
     <div id="contact" className="py-24 relative overflow-hidden bg-[#030712]">
@@ -23,6 +44,7 @@ const Contact: React.FC = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              {/* WhatsApp */}
               <a
                 href={whatsappUrl}
                 target="_blank"
@@ -33,11 +55,29 @@ const Contact: React.FC = () => {
                 Chat en WhatsApp
               </a>
 
-              <div className="flex items-center gap-2 text-gray-500">
-                <span className="hidden sm:block">o escríbenos a</span>
-                <a href="mailto:contacto@artistpro.co" className="text-gray-300 hover:text-white underline decoration-gray-600 underline-offset-4">
-                  contacto@artistpro.co
-                </a>
+              {/* Email copy-to-clipboard */}
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-gray-500 text-sm hidden sm:block">o copia nuestro correo</span>
+                <button
+                  onClick={handleCopyEmail}
+                  className={`group flex items-center gap-2 px-5 py-3 rounded-full border transition-all duration-300 font-medium text-sm
+                    ${copied
+                      ? 'border-green-500/60 bg-green-500/10 text-green-400'
+                      : 'border-gray-700 bg-white/5 text-gray-300 hover:border-gray-500 hover:text-white hover:bg-white/10'
+                    }`}
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4 text-green-400" />
+                      <span>¡Copiado!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      <span>{EMAIL}</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
@@ -48,7 +88,7 @@ const Contact: React.FC = () => {
                 </div>
                 <div className="text-left">
                   <p className="text-white font-medium">Soporte y Ventas</p>
-                  <p className="text-gray-400 text-sm">Respuesta rápida (Lun-Sáb)</p>
+                  <p className="text-gray-400 text-sm">contacto@artistpro.co</p>
                 </div>
                 <div className="ml-auto">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>

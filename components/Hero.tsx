@@ -9,9 +9,9 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-[#030712] z-10"></div>
         <img 
-          src="https://picsum.photos/id/453/1920/1080" 
-          alt="Studio Background" 
-          className="w-full h-full object-cover opacity-40 scale-105 animate-pulse-slow"
+          src="/studio/5163497992533773427.jpg" 
+          alt="Artist Pro Studio" 
+          className="w-full h-full object-cover opacity-50 scale-105 animate-pulse-slow"
         />
         {/* Animated Blobs */}
         <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
             </span>
-            <span className="text-sm font-medium text-gray-200">Agenda Abierta 2024-2025</span>
+            <span className="text-sm font-medium text-gray-200">Agenda Abierta 2026-2027</span>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-black tracking-tight text-white leading-[1.1]">

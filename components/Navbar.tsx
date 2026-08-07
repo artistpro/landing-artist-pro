@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Music } from 'lucide-react';
-import { COMPANY_NAME } from '../constants';
+import { Menu, X } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,6 +60,8 @@ const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'Inicio', href: '/', isRoute: true },
     { name: 'Servicios', href: '/#services', isRoute: false },
+    { name: 'Estudio', href: '/#gallery', isRoute: false },
+    { name: 'Blog', href: '/blog', isRoute: true },
     { name: 'Cursos', href: '/cursos', isRoute: true },
     { name: 'Nosotros', href: '/#about', isRoute: false },
     { name: 'Contacto', href: '/#contact', isRoute: false },
@@ -71,13 +72,12 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0 flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
-            <div className="bg-gradient-to-tr from-primary to-secondary p-2 rounded-lg">
-              <Music className="h-6 w-6 text-white" />
-            </div>
-            <span className="font-bold text-2xl tracking-tighter text-white">
-              {COMPANY_NAME}
-            </span>
+          <Link to="/" className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
+            <img
+              src="/logo-artistpro.png"
+              alt="Artist Pro"
+              className="h-10 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Menu */}

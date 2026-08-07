@@ -9,8 +9,8 @@ const RadioSection: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    // URL Segura Directa (HTTPS) - Fuente Principal
-    const STREAM_URL = "https://radio.artistpro.co/listen/radioartistpro/radio.mp3";
+    // URL Segura Directa (HTTPS via DuckDNS / AzuraCast)
+    const STREAM_URL = "https://radiobt.duckdns.org/listen/radioartistpro/radio.mp3";
 
     // Proxy Vercel (Fallback por si falla la directa)
     const PROXY_URL = "/api/radio-stream";

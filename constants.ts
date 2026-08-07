@@ -34,28 +34,32 @@ export const SERVICES: Service[] = [
     id: "live-sessions",
     title: "Live Sessions & Grabación",
     description: "Estudio de grabación especializado en Live Sessions. Capturamos la energía del momento con acústica perfecta y mezcla de clase mundial.",
+    details: "Nuestro estudio está diseñado para capturar el sonido en vivo con la mayor fidelidad posible. Contamos con sala de grabación acústicamente tratada, sala de control con monitores KRK, amplificadores Marshall, batería Paiste y una cadena de señal de clase mundial. Ideal para bandas, solistas, sesiones de video y contenido audiovisual.",
     icon: Mic2,
-    image: "https://picsum.photos/800/600?random=1"
+    image: "/studio/5163497992533773429.jpg"
   },
   {
-    id: "streaming-solutions",
-    title: "Desarrollo Streaming",
-    description: "Soluciones integrales de streaming para eventos y marcas. Estabilidad garantizada y calidad broadcast para tu audiencia.",
+    id: "produccion-multimedia",
+    title: "Producción Multimedia",
+    description: "Creamos contenido audiovisual de alta calidad: desde video clips y video lyrics hasta autorías multimedia y producción visual para tu marca.",
+    details: "Llevamos tu música y tu marca al mundo visual. Nuestros servicios de producción multimedia incluyen:\n\n• Desarrollo de video profesional\n• Producción audiovisual para artistas y marcas\n• Multimedia video (visuales, motion graphics)\n• Video lyrics animados\n• Autorías multimedia (masterización visual, edición avanzada)\n\nCada proyecto se trabaja con una estética cuidada, alineada con tu identidad artística o corporativa.",
     icon: Cast,
-    image: "https://picsum.photos/800/600?random=2"
+    image: "/studio/5163497992533773428.jpg"
   },
   {
     id: "online-radio",
     title: "Radios Online Corporativas",
     description: "Crea tu propia voz. Diseñamos e implementamos radios online corporativas para fortalecer la comunicación interna y externa.",
+    details: "Una radio online corporativa es una herramienta poderosa para conectar con tu equipo y tus clientes. Nos encargamos de todo: servidor de streaming, panel de administración, automatización de contenido, jingles y programación. Tu marca sonando 24/7 de forma profesional.",
     icon: Radio,
-    image: "https://picsum.photos/800/600?random=3"
+    image: "/studio/5163497992533773431.jpg"
   },
   {
     id: "youtube-247",
     title: "Transmisiones 24/7",
     description: "Sistemas robustos para transmisiones ininterrumpidas en YouTube. Ideal para canales de música lo-fi, noticias o contenido de marca.",
+    details: "Configuramos y mantenemos sistemas de transmisión continua en YouTube para canales de música, radio, noticias o contenido de marca. Automatización de playlists, gestión de archivos de video y monitoreo constante para que tu canal nunca se detenga.",
     icon: Globe,
-    image: "https://picsum.photos/800/600?random=4"
+    image: "/studio/5165749792347458906.jpg"
   }
 ];
