@@ -9,6 +9,7 @@ const Footer: React.FC = () => {
         <div className="text-center md:text-left">
           <h2 className="text-2xl font-bold text-white tracking-tighter mb-2">{COMPANY_NAME}</h2>
           <p className="text-gray-500 text-sm">© {new Date().getFullYear()} Artist Pro. Todos los derechos reservados.</p>
+          <p className="text-gray-600 text-xs mt-1">ARTIST PRO® · Marca Registrada ante la Superintendencia de Industria y Comercio.</p>
         </div>
 
         <div className="flex space-x-6">
