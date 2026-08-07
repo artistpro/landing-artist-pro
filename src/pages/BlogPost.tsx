@@ -18,8 +18,32 @@ const BlogPost: React.FC = () => {
     if (!slug) return;
     getPostBySlug(slug)
       .then((p) => {
-        if (!p) setNotFound(true);
-        else setPost(p);
+        if (!p) {
+          setNotFound(true);
+        } else {
+          setPost(p);
+          document.title = `${p.title} | Blog Artist Pro`;
+
+          // Dynamic Open Graph Update
+          const setMeta = (property: string, content: string) => {
+            let tag = document.querySelector(`meta[property="${property}"]`) || document.querySelector(`meta[name="${property}"]`);
+            if (tag) {
+              tag.setAttribute('content', content);
+            }
+          };
+
+          const fullImgUrl = p.imageUrl?.startsWith('http')
+            ? p.imageUrl
+            : `https://www.artistpro.co${p.imageUrl || '/studio/5163497992533773429.jpg'}`;
+
+          setMeta('og:title', p.title);
+          setMeta('og:description', p.excerpt);
+          setMeta('og:image', fullImgUrl);
+          setMeta('og:url', `https://www.artistpro.co/blog/${p.slug}`);
+          setMeta('twitter:title', p.title);
+          setMeta('twitter:description', p.excerpt);
+          setMeta('twitter:image', fullImgUrl);
+        }
       })
       .finally(() => setLoading(false));
   }, [slug]);
