@@ -292,7 +292,7 @@ export async function createPost(post: Omit<Post, 'id' | 'createdAt' | 'updatedA
   local.unshift(fullPost);
   saveLocalPosts(local);
 
-  return fullPost.id;
+  return fullPost.id!;
 }
 
 // ── Admin: update post ───────────────────────────────────────

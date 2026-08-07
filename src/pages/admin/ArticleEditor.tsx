@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Save, Upload, AlertCircle, CheckCircle, Tag, Eye } from 'lucide-react';
-import { createPost, getPostById, updatePost, generateSlug, Post } from '../../../lib/posts';
+import { createPost, getPostById, updatePost, generateSlug } from '../../../lib/posts';
 
 const CATEGORIES = ['Producción', 'Streaming', 'Grabación', 'Consejos', 'Industria'];
 
