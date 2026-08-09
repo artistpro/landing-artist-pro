@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Tag, ArrowRight, BookOpen } from 'lucide-react';
-import { getPublishedPosts, Post } from '../../lib/posts';
+import { getPublishedPosts, formatPostDate, Post } from '../../lib/posts';
 import Section from '../../components/ui/Section';
 
 const CATEGORIES = ['Todos', 'Producción', 'Streaming', 'Grabación', 'Consejos', 'Industria'];
@@ -103,17 +103,7 @@ const Blog: React.FC = () => {
                       <div className="flex items-center justify-between pt-4 border-t border-gray-800">
                         <div className="flex items-center gap-2 text-gray-500 text-xs">
                           <Calendar className="w-3.5 h-3.5" />
-                          {(() => {
-                            try {
-                              if (!post.publishedAt) return 'Reciente';
-                              const d = typeof post.publishedAt?.toDate === 'function'
-                                ? post.publishedAt.toDate()
-                                : new Date(post.publishedAt?.seconds ? post.publishedAt.seconds * 1000 : post.publishedAt);
-                              return d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
-                            } catch {
-                              return 'Reciente';
-                            }
-                          })()}
+                          {formatPostDate(post.publishedAt)}
                         </div>
                         <span className="flex items-center gap-1 text-primary text-xs font-semibold group-hover:gap-2 transition-all">
                           Leer <ArrowRight className="w-3.5 h-3.5" />

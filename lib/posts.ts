@@ -38,8 +38,8 @@ const INITIAL_POSTS: Post[] = [
     category: 'Industria',
     status: 'published',
     imageUrl: '/studio/5163497992533773427.jpg',
-    publishedAt: { toDate: () => new Date() },
-    createdAt: { toDate: () => new Date() },
+    publishedAt: new Date('2026-08-06T20:00:00.000Z').toISOString(),
+    createdAt: new Date('2026-08-06T20:00:00.000Z').toISOString(),
     content: `
       <p><strong>Por Ricardo Echeverry</strong><br>Fundador de Artist Pro</p>
 
@@ -340,3 +340,30 @@ export function generateSlug(title: string): string {
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-');
 }
+
+// ── Util: format post date safely ───────────────────────────
+export function formatPostDate(dateVal: any, opts?: Intl.DateTimeFormatOptions): string {
+  if (!dateVal) return 'Reciente';
+  try {
+    let dateObj: Date | null = null;
+    if (typeof dateVal?.toDate === 'function') {
+      dateObj = dateVal.toDate();
+    } else if (typeof dateVal === 'number') {
+      dateObj = new Date(dateVal);
+    } else if (typeof dateVal === 'string') {
+      dateObj = new Date(dateVal);
+    } else if (dateVal?.seconds) {
+      dateObj = new Date(dateVal.seconds * 1000);
+    } else if (dateVal instanceof Date) {
+      dateObj = dateVal;
+    }
+
+    if (dateObj && !isNaN(dateObj.getTime())) {
+      return dateObj.toLocaleDateString('es-CO', opts || { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+  } catch (e) {
+    console.error('Error formatting post date:', e);
+  }
+  return 'Reciente';
+}
+

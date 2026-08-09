@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Tag, ArrowLeft, MessageCircle, Copy, Check } from 'lucide-react';
-import { getPostBySlug, Post } from '../../lib/posts';
+import { getPostBySlug, formatPostDate, Post } from '../../lib/posts';
 import { CONTACT_INFO } from '../../constants';
 
 const WHATSAPP_URL = `https://wa.me/${CONTACT_INFO.whatsapp}`;
@@ -102,16 +102,7 @@ const BlogPost: React.FC = () => {
           {post.publishedAt && (
             <span className="flex items-center gap-1.5 text-gray-500 text-sm">
               <Calendar className="w-3.5 h-3.5" />
-              {(() => {
-                try {
-                  const d = typeof post.publishedAt?.toDate === 'function'
-                    ? post.publishedAt.toDate()
-                    : new Date(post.publishedAt?.seconds ? post.publishedAt.seconds * 1000 : post.publishedAt);
-                  return d.toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' });
-                } catch {
-                  return 'Reciente';
-                }
-              })()}
+              {formatPostDate(post.publishedAt, { day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
           )}
         </div>
