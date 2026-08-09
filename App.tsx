@@ -18,10 +18,11 @@ const BlogPost = lazy(() => import('./src/pages/BlogPost'));
 const AdminLogin = lazy(() => import('./src/pages/admin/Login'));
 const AdminDashboard = lazy(() => import('./src/pages/admin/Dashboard'));
 const ArticleEditor = lazy(() => import('./src/pages/admin/ArticleEditor'));
+const ConcursoLanding = lazy(() => import('./src/concurso/ConcursoLanding'));
 
 const PageLoader = () => (
-  <div className="min-h-screen bg-[#030712] flex items-center justify-center">
-    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  <div className="min-h-screen bg-[#08080A] flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-[#FF4D2E] border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
@@ -59,6 +60,7 @@ function App() {
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/concurso" element={<ConcursoLanding />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/cursos" element={<Courses />} />
