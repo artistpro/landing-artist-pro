@@ -1,12 +1,12 @@
 import React from 'react';
-import { Mic, Video, Radio, GraduationCap, CheckCircle2, Sparkles } from 'lucide-react';
+import { Music, Tv, Radio, Award, CheckCircle2, Sparkles } from 'lucide-react';
 import { PREMIOS } from '../data';
 
 const ICON_MAP: Record<string, React.ElementType> = {
-  Mic,
-  Video,
-  Radio,
-  GraduationCap,
+  Mic: Music,
+  Video: Tv,
+  Radio: Radio,
+  GraduationCap: Award,
 };
 
 export const PremiosConcurso: React.FC = () => {
@@ -37,7 +37,7 @@ export const PremiosConcurso: React.FC = () => {
         {/* Prize Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {PREMIOS.map((premio, idx) => {
-            const IconComponent = ICON_MAP[premio.icon] || Mic;
+            const IconComponent = ICON_MAP[premio.icon] || Music;
 
             return (
               <div

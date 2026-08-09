@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Compass, HeartHandshake } from 'lucide-react';
+import { MapPin, Compass, Heart } from 'lucide-react';
 import { MUNICIPIOS } from '../data';
 
 export const CoberturaConcurso: React.FC = () => {
@@ -71,7 +71,7 @@ export const CoberturaConcurso: React.FC = () => {
 
           {/* Regional Pride Footer Note */}
           <div className="mt-10 pt-6 border-t border-gray-800/80 text-center flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-gray-400">
-            <HeartHandshake className="w-4 h-4 text-[#FF4D2E]" />
+            <Heart className="w-4 h-4 text-[#FF4D2E]" />
             <span>Unidos por el arte, la música y la identidad cultural del Paisaje Cultural Cafetero.</span>
           </div>
         </div>

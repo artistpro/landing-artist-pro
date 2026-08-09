@@ -9,6 +9,7 @@ import RadioSection from './components/RadioSection';
 import Gallery from './components/Gallery';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+import ConcursoLanding from './src/concurso/ConcursoLanding';
 
 // Lazy loaded page components for optimal performance & fast initial load
 const Courses = lazy(() => import('./src/pages/Courses'));
@@ -18,7 +19,6 @@ const BlogPost = lazy(() => import('./src/pages/BlogPost'));
 const AdminLogin = lazy(() => import('./src/pages/admin/Login'));
 const AdminDashboard = lazy(() => import('./src/pages/admin/Dashboard'));
 const ArticleEditor = lazy(() => import('./src/pages/admin/ArticleEditor'));
-const ConcursoLanding = lazy(() => import('./src/concurso/ConcursoLanding'));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-[#08080A] flex items-center justify-center">
