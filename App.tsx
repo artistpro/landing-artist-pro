@@ -10,6 +10,7 @@ import Gallery from './components/Gallery';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import ConcursoLanding from './src/concurso/ConcursoLanding';
+import ColectivoLanding from './src/colectivo-pro/ColectivoLanding';
 import { ContestBanner } from './components/ContestBanner';
 
 // Lazy loaded page components for optimal performance & fast initial load
@@ -54,11 +55,11 @@ function Home() {
 
 function MainLayoutContent() {
   const location = useLocation();
-  const isConcursoPage = location.pathname === '/concurso';
+  const isStandalonePage = location.pathname === '/concurso' || location.pathname === '/colectivo-pro';
 
   return (
     <div className="min-h-screen bg-[#030712] text-white selection:bg-primary selection:text-white">
-      {!isConcursoPage && (
+      {!isStandalonePage && (
         <>
           <ContestBanner />
           <Navbar />
@@ -69,6 +70,7 @@ function MainLayoutContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/concurso" element={<ConcursoLanding />} />
+          <Route path="/colectivo-pro" element={<ColectivoLanding />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/cursos" element={<Courses />} />
@@ -103,7 +105,7 @@ function MainLayoutContent() {
         </Routes>
       </Suspense>
 
-      {!isConcursoPage && <Footer />}
+      {!isStandalonePage && <Footer />}
     </div>
   );
 }
