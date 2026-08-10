@@ -120,8 +120,8 @@ export const HeroConcurso: React.FC<HeroConcursoProps> = ({ onInscribirseClick }
 
               {/* Poster Image */}
               <img
-                src="/concurso/conoce los términos y condiciones en.jpg"
-                alt="Póster Artistas & Talentos 2026"
+                src="/concurso/conoce los términos y condiciones en (1).jpg"
+                alt="Póster Artistas & Talentos 2026 Corregido"
                 className="w-full h-auto rounded-2xl object-cover brightness-95 group-hover:brightness-105 transition-all duration-500"
               />
 

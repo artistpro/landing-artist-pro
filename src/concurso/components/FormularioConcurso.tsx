@@ -157,7 +157,7 @@ export const FormularioConcurso: React.FC = () => {
               </a>
             </div>
             <iframe
-              src="https://docs.google.com/forms/d/e/1FAIpQLSc_placeholder/viewform?embedded=true"
+              src="https://docs.google.com/forms/d/17Ichoen3QouyWjCVDhAuQYBmoyejWV_7Poc4U-RWnF0/viewform?embedded=true"
               title="Formulario de Inscripción al Concurso"
               className="w-full h-[750px] border-0"
             >

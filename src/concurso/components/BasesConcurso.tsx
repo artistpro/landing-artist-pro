@@ -12,17 +12,17 @@ export const BasesConcurso: React.FC = () => {
   const PDF_DOCS = [
     {
       titulo: 'Bases, Términos y Condiciones',
-      archivo: '/concurso/documentosconcurso/Bases Terminos y Condiciones.pdf',
+      archivo: '/concurso/documentosconcurso/Bases%20Terminos%20y%20Condiciones.pdf',
       desc: 'Reglamento oficial del concurso, requisitos y jurados.',
     },
     {
       titulo: 'Aviso de Tratamiento de Datos',
-      archivo: '/concurso/documentosconcurso/Aviso Tratamiento Datos Personales.pdf',
+      archivo: '/concurso/documentosconcurso/Aviso%20Tratamiento%20Datos%20Personales.pdf',
       desc: 'Política de privacidad y protección de datos (Ley 1581).',
     },
     {
       titulo: 'Plan Operativo y Cronograma',
-      archivo: '/concurso/documentosconcurso/Plan Operativo y Cronograma Detallado.pdf',
+      archivo: '/concurso/documentosconcurso/Plan%20Operativo%20y%20Cronograma%20Detallado.pdf',
       desc: 'Fases, fechas clave y desarrollo del evento.',
     },
   ];

@@ -21,7 +21,7 @@ const ConcursoLanding: React.FC = () => {
 
     setMeta('og:title', 'Artistas & Talentos 2026 — Concurso por Artist Pro');
     setMeta('og:description', 'Buscamos artistas solistas y bandas del Eje Cafetero y Norte del Valle. ¡Gana grabación profesional, video lyric y promoción!');
-    setMeta('og:image', 'https://www.artistpro.co/concurso/conoce%20los%20t%C3%A9rminos%20y%20condiciones%20en.jpg');
+    setMeta('og:image', 'https://www.artistpro.co/concurso/conoce%20los%20t%C3%A9rminos%20y%20condiciones%20en%20(1).jpg');
     setMeta('og:url', 'https://www.artistpro.co/concurso');
   }, []);
 
