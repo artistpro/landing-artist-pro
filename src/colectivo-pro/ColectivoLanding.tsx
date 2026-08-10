@@ -5,6 +5,7 @@ import { FiltrosBuscador } from './components/FiltrosBuscador';
 import { DirectorioMusicos } from './components/DirectorioMusicos';
 import { FormularioRegistroColectivo } from './components/FormularioRegistroColectivo';
 import { MapaTerritorial } from './components/MapaTerritorial';
+import { AdminProfileSection } from './components/AdminProfileSection';
 import { getMusicos } from './lib/musicosService';
 import { MusicoProfile } from './types';
 import { MusicTrailEffect } from '../concurso/components/MusicTrailEffect';
@@ -116,6 +117,9 @@ const ColectivoLanding: React.FC = () => {
         {/* Regional Territory Coverage Section */}
         <MapaTerritorial />
 
+        {/* Admin & Institutional Leadership Section */}
+        <AdminProfileSection />
+
         {/* CTA Banner Section */}
         <section id="registro" className="py-20 bg-gradient-to-b from-[#07080C] to-[#0A0F15] border-t border-gray-900 relative">
           <div className="max-w-4xl mx-auto px-4 text-center space-y-6">
@@ -145,11 +149,12 @@ const ColectivoLanding: React.FC = () => {
 
       {/* Footer Colectivo */}
       <footer className="py-12 bg-[#050608] border-t border-gray-900 text-center text-xs text-gray-400 space-y-2">
-        <p className="font-bold uppercase tracking-wider text-gray-300">
-          COLECTIVO ARTIST PRO · PAISAJE CULTURAL CAFETERO &amp; NORTE DEL VALLE
+        <p className="font-bold uppercase tracking-wider text-gray-300 flex items-center justify-center gap-2">
+          <img src="/logo-artistpro.png" alt="Artist Pro" className="h-4 w-auto inline" />
+          <span>COLECTIVO ARTIST PRO · PAISAJE CULTURAL CAFETERO &amp; NORTE DEL VALLE</span>
         </p>
         <p className="flex items-center justify-center gap-1 text-gray-400">
-          <span>Impulsando el ecosistema musical independiente con</span>
+          <span>Un proyecto ideado, liderado e impulsado por Artist Pro con</span>
           <Heart className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
         </p>
       </footer>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X, ArrowLeft, Users, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowLeft, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface HeaderColectivoProps {
@@ -13,6 +13,7 @@ export const HeaderColectivo: React.FC<HeaderColectivoProps> = ({ onRegistroClic
     { name: 'Inicio', href: '#' },
     { name: 'Directorio de Músicos', href: '#directorio' },
     { name: 'Cobertura DANE', href: '#cobertura' },
+    { name: 'Director & Equipo', href: '#direccion' },
     { name: 'Suma tu Perfil', href: '#registro' },
   ];
 
@@ -22,17 +23,19 @@ export const HeaderColectivo: React.FC<HeaderColectivoProps> = ({ onRegistroClic
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             
-            {/* Brand Logo & Tag */}
-            <a href="#" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-amber-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-                <Users className="w-5 h-5 text-black" />
-              </div>
-              <div>
-                <span className="font-black text-white text-base tracking-tight block uppercase leading-none">
+            {/* Brand Logo & Tag with Official Logo */}
+            <a href="#" className="flex items-center gap-3.5 group">
+              <img
+                src="/logo-artistpro.png"
+                alt="Artist Pro Logo"
+                className="h-10 w-auto object-contain group-hover:scale-105 transition-transform"
+              />
+              <div className="border-l border-emerald-800/60 pl-3">
+                <span className="font-black text-white text-sm tracking-tight block uppercase leading-none">
                   COLECTIVO <span className="text-emerald-400">ARTIST PRO</span>
                 </span>
-                <span className="text-[10px] text-amber-300 font-bold tracking-widest uppercase block">
-                  RED DE MÚSICOS · EJE CAFETERO &amp; VALLE
+                <span className="text-[10px] text-amber-300 font-bold tracking-wider uppercase block mt-0.5">
+                  RED DE MÚSICOS REGIONAL
                 </span>
               </div>
             </a>
