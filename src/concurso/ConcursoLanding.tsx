@@ -6,6 +6,7 @@ import { CoberturaConcurso } from './components/CoberturaConcurso';
 import { FormularioConcurso } from './components/FormularioConcurso';
 import { MenoresEdadSection } from './components/MenoresEdadSection';
 import { BasesConcurso } from './components/BasesConcurso';
+import { MusicTrailEffect } from './components/MusicTrailEffect';
 
 const ConcursoLanding: React.FC = () => {
   useEffect(() => {
@@ -33,7 +34,8 @@ const ConcursoLanding: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#08080A] text-white selection:bg-[#FF4D2E] selection:text-white">
+    <div className="min-h-screen bg-[#08080A] text-white selection:bg-[#FF4D2E] selection:text-white relative">
+      <MusicTrailEffect />
       <HeaderConcurso />
       <main>
         <HeroConcurso onInscribirseClick={scrollToInscripcion} />
