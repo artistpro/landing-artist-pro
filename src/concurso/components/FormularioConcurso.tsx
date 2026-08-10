@@ -1,344 +1,169 @@
 import React, { useState } from 'react';
-import { Send, CheckCircle2, User, Music, Phone, Mail, Link as LinkIcon, MapPin, Trophy } from 'lucide-react';
-import { GENEROS_MUSICALES, MUNICIPIOS } from '../data';
-import { InscripcionForm } from '../types';
+import { ExternalLink, Sparkles, Trophy, FileText, CheckCircle2, Zap } from 'lucide-react';
 
 export const FormularioConcurso: React.FC = () => {
-  const [formData, setFormData] = useState<InscripcionForm>({
-    nombreArtistico: '',
-    tipoParticipante: 'solista',
-    generoMusical: GENEROS_MUSICALES[0],
-    departamento: 'Risaralda',
-    municipio: 'Pereira',
-    nombreContacto: '',
-    whatsapp: '',
-    email: '',
-    linkDemo: '',
-    integrantesCount: 1,
-    comentarios: '',
-  });
+  const FORM_PRINCIPAL_URL = 'https://docs.google.com/forms/d/17Ichoen3QouyWjCVDhAuQYBmoyejWV_7Poc4U-RWnF0/viewform';
 
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleChange = (field: keyof InscripcionForm, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    // Save locally to local storage as fallback storage
-    setTimeout(() => {
-      try {
-        const existing = JSON.parse(localStorage.getItem('artistpro_concurso_inscripciones') || '[]');
-        existing.push({ ...formData, timestamp: new Date().toISOString() });
-        localStorage.setItem('artistpro_concurso_inscripciones', JSON.stringify(existing));
-      } catch (err) {
-        console.error('Error saving inscription:', err);
-      }
-      setLoading(false);
-      setSubmitted(true);
-    }, 1200);
-  };
+  const [embedForm, setEmbedForm] = useState(false);
 
   return (
-    <section id="inscripcion" className="py-24 bg-[#0A0A0E] relative overflow-hidden border-t border-gray-900">
+    <section id="inscripcion" className="py-24 bg-[#08080A] relative overflow-hidden border-t border-gray-900">
       {/* Glow Effects */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#FF4D2E]/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[550px] h-[550px] bg-[#FF4D2E]/15 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Header */}
-        <div className="text-center mb-14 space-y-4">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1A1A24] border border-[#FF4D2E]/40 text-[#FF4D2E] text-xs font-black uppercase tracking-widest">
             <Trophy className="w-3.5 h-3.5 text-[#FFB800]" />
-            FORMULARIO OFICIAL DE INSCRIPCIÓN
+            PROCESO DE INSCRIPCIÓN OFICIAL
           </div>
           
           <h2 className="text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
-            ¡INSCRÍBETE <span className="text-[#F4E8C1]">AQUÍ</span> Y PARTICIPA!
+            ¡INSCRÍBETE <span className="text-[#F4E8C1]">AHORA</span> AL CONCURSO!
           </h2>
           
-          <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
-            Completa el siguiente formulario con los datos de tu propuesta musical. La inscripción es 100% gratuita.
+          <p className="text-gray-300 text-base sm:text-lg">
+            Selecciona la modalidad de participación que prefieras. Las inscripciones se gestionan de forma segura a través de Google Forms.
           </p>
         </div>
 
-        {/* Success Modal Notification */}
-        {submitted ? (
-          <div className="bg-[#12121A] border-2 border-[#FF4D2E] rounded-3xl p-10 text-center space-y-6 shadow-2xl animate-in zoom-in-95 duration-500">
-            <div className="w-20 h-20 bg-gradient-to-br from-[#FF4D2E] to-[#FFB800] rounded-full flex items-center justify-center mx-auto shadow-xl shadow-[#FF4D2E]/40 animate-bounce">
-              <CheckCircle2 className="w-10 h-10 text-white" />
-            </div>
+        {/* Dual Options Grid: Libre vs Premium */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          
+          {/* Option 1: Libre / Gratuita */}
+          <div className="bg-[#121218]/90 border border-gray-800 rounded-3xl p-8 flex flex-col justify-between hover:border-[#FF4D2E]/50 transition-all duration-300 shadow-xl">
+            <div>
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <span className="bg-[#1A1A24] text-[#F4E8C1] border border-gray-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
+                  MODALIDAD 1
+                </span>
+                <span className="text-[#FF4D2E] font-black text-xl uppercase">100% GRATUITO</span>
+              </div>
 
-            <div className="space-y-2">
-              <h3 className="text-2xl sm:text-4xl font-black text-white uppercase">
-                ¡INSCRIPCIÓN EXITOSA! 🎸🎉
+              <h3 className="text-2xl font-black text-white uppercase mb-3">
+                Inscripción Libre
               </h3>
-              <p className="text-[#F4E8C1] font-semibold text-base sm:text-lg">
-                Hemos recibido la postulación de <strong className="text-white font-bold">{formData.nombreArtistico}</strong>.
+
+              <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+                Participación sin costo alguno. Tu material será revisado por el jurado oficial para la selección de finalistas.
               </p>
+
+              <ul className="space-y-3 mb-8 text-xs sm:text-sm text-gray-300">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#FFB800]" />
+                  <span>Participación en las 6 categorías del concurso</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#FFB800]" />
+                  <span>Evaluación técnica por jurados expertos</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#FFB800]" />
+                  <span>Acceso a los grandes premios del evento</span>
+                </li>
+              </ul>
             </div>
 
-            <p className="text-gray-300 text-sm max-w-xl mx-auto leading-relaxed">
-              Nuestro equipo evaluará tu propuesta musical. Nos pondremos en contacto contigo a través de WhatsApp (<strong>{formData.whatsapp}</strong>) o por correo electrónico.
-            </p>
-
-            <button
-              onClick={() => {
-                setSubmitted(false);
-                setFormData({
-                  nombreArtistico: '',
-                  tipoParticipante: 'solista',
-                  generoMusical: GENEROS_MUSICALES[0],
-                  departamento: 'Risaralda',
-                  municipio: 'Pereira',
-                  nombreContacto: '',
-                  whatsapp: '',
-                  email: '',
-                  linkDemo: '',
-                  integrantesCount: 1,
-                  comentarios: '',
-                });
-              }}
-              className="inline-flex items-center gap-2 bg-[#1C1C26] text-gray-300 hover:text-white px-6 py-3 rounded-2xl text-sm font-bold border border-gray-700 hover:border-[#FF4D2E] transition-colors"
+            <a
+              href={FORM_PRINCIPAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-4 bg-gradient-to-r from-[#FF4D2E] to-[#FF8C33] text-white font-extrabold text-sm uppercase tracking-wider rounded-2xl shadow-lg shadow-[#FF4D2E]/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-3 text-center"
             >
-              Realizar otra inscripción
-            </button>
+              <Sparkles className="w-4 h-4" />
+              <span>DILIGENCIAR FORMULARIO GRATIS</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
           </div>
-        ) : (
-          /* Main Form Card */
-          <form
-            onSubmit={handleSubmit}
-            className="bg-[#121218]/90 backdrop-blur-2xl border border-gray-800/90 rounded-3xl p-6 sm:p-12 shadow-2xl space-y-8"
-          >
-            {/* Step 1: Artist info */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 text-[#FF4D2E] text-xs font-black uppercase tracking-wider border-b border-gray-800 pb-3">
-                <Music className="w-4 h-4" />
-                <span>1. Información Artística</span>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* Nombre */}
-                <div>
-                  <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                    Nombre del Artista o Banda *
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input
-                      type="text"
-                      required
-                      value={formData.nombreArtistico}
-                      onChange={(e) => handleChange('nombreArtistico', e.target.value)}
-                      placeholder="Ej. Los Cafeteros Rock / Valentina Ríos"
-                      className="w-full bg-[#181822] border border-gray-800 rounded-2xl pl-11 pr-4 py-3.5 text-white placeholder-gray-600 text-sm font-medium focus:outline-none focus:border-[#FF4D2E] focus:ring-1 focus:ring-[#FF4D2E] transition-colors"
-                    />
-                  </div>
-                </div>
-
-                {/* Tipo de participante */}
-                <div>
-                  <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                    Modalidad *
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { id: 'solista', label: '🎤 Solista' },
-                      { id: 'banda', label: '🎸 Agrupación / Banda' },
-                    ].map((mode) => (
-                      <button
-                        type="button"
-                        key={mode.id}
-                        onClick={() => handleChange('tipoParticipante', mode.id)}
-                        className={`py-3 px-4 rounded-2xl text-xs font-bold uppercase transition-all ${
-                          formData.tipoParticipante === mode.id
-                            ? 'bg-[#FF4D2E] text-white shadow-md'
-                            : 'bg-[#181822] text-gray-400 border border-gray-800 hover:text-white'
-                        }`}
-                      >
-                        {mode.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Género musical */}
-                <div>
-                  <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                    Género Musical *
-                  </label>
-                  <select
-                    value={formData.generoMusical}
-                    onChange={(e) => handleChange('generoMusical', e.target.value)}
-                    className="w-full bg-[#181822] border border-gray-800 rounded-2xl px-4 py-3.5 text-white text-sm font-medium focus:outline-none focus:border-[#FF4D2E] transition-colors cursor-pointer"
-                  >
-                    {GENEROS_MUSICALES.map((g) => (
-                      <option key={g} value={g}>
-                        {g}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Integrantes */}
-                <div>
-                  <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                    Número de Integrantes
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={20}
-                    value={formData.integrantesCount}
-                    onChange={(e) => handleChange('integrantesCount', parseInt(e.target.value) || 1)}
-                    className="w-full bg-[#181822] border border-gray-800 rounded-2xl px-4 py-3.5 text-white text-sm font-medium focus:outline-none focus:border-[#FF4D2E] transition-colors"
-                  />
-                </div>
-              </div>
+          {/* Option 2: Premium ($50.000 COP) */}
+          <div className="bg-gradient-to-b from-[#1A1A26] to-[#12121A] border-2 border-[#FFB800]/60 rounded-3xl p-8 flex flex-col justify-between hover:border-[#FFB800] transition-all duration-300 shadow-2xl relative">
+            <div className="absolute -top-3.5 right-6 bg-[#FFB800] text-black text-[11px] font-black uppercase tracking-wider px-3.5 py-1 rounded-full shadow-md">
+              👑 Beneficios Exclusivos
             </div>
 
-            {/* Step 2: Location & Contact */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 text-[#FFB800] text-xs font-black uppercase tracking-wider border-b border-gray-800 pb-3">
-                <MapPin className="w-4 h-4" />
-                <span>2. Origen &amp; Contacto</span>
+            <div>
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <span className="bg-[#FFB800]/20 text-[#FFB800] border border-[#FFB800]/40 px-3 py-1 rounded-full text-xs font-bold uppercase">
+                  MODALIDAD 2 · PREMIUM
+                </span>
+                <span className="text-[#FFB800] font-black text-xl">$50.000 COP</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* Departamento */}
-                <div>
-                  <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                    Departamento *
-                  </label>
-                  <select
-                    value={formData.departamento}
-                    onChange={(e) => handleChange('departamento', e.target.value)}
-                    className="w-full bg-[#181822] border border-gray-800 rounded-2xl px-4 py-3.5 text-white text-sm font-medium focus:outline-none focus:border-[#FF4D2E] transition-colors cursor-pointer"
-                  >
-                    {['Risaralda', 'Caldas', 'Quindío', 'Norte del Valle'].map((d) => (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <h3 className="text-2xl font-black text-white uppercase mb-3">
+                Inscripción Premium
+              </h3>
 
-                {/* Municipio */}
-                <div>
-                  <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                    Municipio / Ciudad *
-                  </label>
-                  <select
-                    value={formData.municipio}
-                    onChange={(e) => handleChange('municipio', e.target.value)}
-                    className="w-full bg-[#181822] border border-gray-800 rounded-2xl px-4 py-3.5 text-white text-sm font-medium focus:outline-none focus:border-[#FF4D2E] transition-colors cursor-pointer"
-                  >
-                    {MUNICIPIOS.filter((m) => m.departamento === formData.departamento).map((m) => (
-                      <option key={m.nombre} value={m.nombre}>
-                        {m.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+                Obtén retroalimentación profesional de tu canción y beneficios exclusivos de formación musical.
+              </p>
 
-                {/* Nombre de contacto */}
-                <div>
-                  <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                    Nombre del Representante o Lope *
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input
-                      type="text"
-                      required
-                      value={formData.nombreContacto}
-                      onChange={(e) => handleChange('nombreContacto', e.target.value)}
-                      placeholder="Nombre del encargado de contacto"
-                      className="w-full bg-[#181822] border border-gray-800 rounded-2xl pl-11 pr-4 py-3.5 text-white placeholder-gray-600 text-sm font-medium focus:outline-none focus:border-[#FF4D2E] transition-colors"
-                    />
-                  </div>
-                </div>
-
-                {/* WhatsApp */}
-                <div>
-                  <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                    Teléfono / WhatsApp *
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input
-                      type="tel"
-                      required
-                      value={formData.whatsapp}
-                      onChange={(e) => handleChange('whatsapp', e.target.value)}
-                      placeholder="Ej. +57 300 123 4567"
-                      className="w-full bg-[#181822] border border-gray-800 rounded-2xl pl-11 pr-4 py-3.5 text-white placeholder-gray-600 text-sm font-medium focus:outline-none focus:border-[#FF4D2E] transition-colors"
-                    />
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div className="sm:col-span-2">
-                  <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                    Correo Electrónico *
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => handleChange('email', e.target.value)}
-                      placeholder="ejemplo@artista.com"
-                      className="w-full bg-[#181822] border border-gray-800 rounded-2xl pl-11 pr-4 py-3.5 text-white placeholder-gray-600 text-sm font-medium focus:outline-none focus:border-[#FF4D2E] transition-colors"
-                    />
-                  </div>
-                </div>
-              </div>
+              <ul className="space-y-3 mb-8 text-xs sm:text-sm text-gray-300">
+                <li className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-[#FFB800]" />
+                  <strong className="text-white font-semibold">Análisis PDF detallado</strong> de tu propuesta por el equipo de Artist Pro
+                </li>
+                <li className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-[#FFB800]" />
+                  <span>Certificado oficial de participación</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-[#FFB800]" />
+                  <span>15% Dcto. en servicios de estudio + 20% Dcto. en Cursos</span>
+                </li>
+              </ul>
             </div>
 
-            {/* Step 3: Music link */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 text-[#F4E8C1] text-xs font-black uppercase tracking-wider border-b border-gray-800 pb-3">
-                <LinkIcon className="w-4 h-4" />
-                <span>3. Enlace de la Canción o Propuesta</span>
-              </div>
-
-              <div>
-                <label className="text-gray-300 text-xs font-bold uppercase tracking-wider block mb-2">
-                  Enlace a Demo / Video / Canción (YouTube, Spotify, Drive, Instagram, etc.) *
-                </label>
-                <input
-                  type="url"
-                  required
-                  value={formData.linkDemo}
-                  onChange={(e) => handleChange('linkDemo', e.target.value)}
-                  placeholder="https://youtube.com/watch?v=... o link de Drive/Spotify"
-                  className="w-full bg-[#181822] border border-gray-800 rounded-2xl px-4 py-3.5 text-white placeholder-gray-600 text-sm font-medium focus:outline-none focus:border-[#FF4D2E] transition-colors"
-                />
-              </div>
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-4 bg-gradient-to-r from-[#FF4D2E] via-[#FF8C33] to-[#FFB800] text-white font-extrabold text-base tracking-wider uppercase rounded-2xl shadow-xl shadow-[#FF4D2E]/25 hover:shadow-[#FF4D2E]/40 hover:scale-[1.01] transition-all disabled:opacity-60 flex items-center justify-center gap-3"
+            <a
+              href={FORM_PRINCIPAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-4 bg-gradient-to-r from-[#FFB800] to-[#FF8C33] text-black font-extrabold text-sm uppercase tracking-wider rounded-2xl shadow-lg shadow-[#FFB800]/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-3 text-center"
             >
-              {loading ? (
-                <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>
-                  <Send className="w-5 h-5" />
-                  <span>COMPLETAR Y ENVIAR INSCRIPCIÓN</span>
-                </>
-              )}
-            </button>
-          </form>
+              <Trophy className="w-4 h-4" />
+              <span>INSCRIPCIÓN PREMIUM (GOOGLE FORMS)</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+
+        </div>
+
+        {/* Option to Toggle Embedded Google Form */}
+        <div className="text-center pt-4">
+          <button
+            onClick={() => setEmbedForm(!embedForm)}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#14141E] border border-gray-800 text-gray-300 text-xs font-bold hover:text-white hover:border-[#FF4D2E]/40 transition-all"
+          >
+            <FileText className="w-4 h-4 text-[#FF4D2E]" />
+            <span>{embedForm ? 'Ocultar Formulario Integrado' : 'Ver Formulario Directamente en la Página'}</span>
+          </button>
+        </div>
+
+        {/* Embedded Google Form Container */}
+        {embedForm && (
+          <div className="mt-8 rounded-3xl overflow-hidden border-2 border-gray-800 bg-white shadow-2xl animate-in fade-in duration-500">
+            <div className="bg-[#121218] p-4 text-white text-xs font-bold flex items-center justify-between">
+              <span>Formulario Oficial de Inscripción (Google Forms)</span>
+              <a
+                href={FORM_PRINCIPAL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#FFB800] hover:underline flex items-center gap-1"
+              >
+                <span>Abrir en ventana completa</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSc_placeholder/viewform?embedded=true"
+              title="Formulario de Inscripción al Concurso"
+              className="w-full h-[750px] border-0"
+            >
+              Cargando formulario de Google Forms...
+            </iframe>
+          </div>
         )}
 
       </div>

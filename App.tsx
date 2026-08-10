@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -10,6 +10,7 @@ import Gallery from './components/Gallery';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import ConcursoLanding from './src/concurso/ConcursoLanding';
+import { ContestBanner } from './components/ContestBanner';
 
 // Lazy loaded page components for optimal performance & fast initial load
 const Courses = lazy(() => import('./src/pages/Courses'));
@@ -51,51 +52,67 @@ function Home() {
   );
 }
 
+function MainLayoutContent() {
+  const location = useLocation();
+  const isConcursoPage = location.pathname === '/concurso';
+
+  return (
+    <div className="min-h-screen bg-[#030712] text-white selection:bg-primary selection:text-white">
+      {!isConcursoPage && (
+        <>
+          <ContestBanner />
+          <Navbar />
+        </>
+      )}
+
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/concurso" element={<ConcursoLanding />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/cursos" element={<Courses />} />
+          <Route path="/cursos/:id" element={<CourseDetail />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/nuevo"
+            element={
+              <ProtectedRoute>
+                <ArticleEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/editar/:id"
+            element={
+              <ProtectedRoute>
+                <ArticleEditor />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
+
+      {!isConcursoPage && <Footer />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-[#030712] text-white selection:bg-primary selection:text-white">
-          <Navbar />
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/concurso" element={<ConcursoLanding />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/cursos" element={<Courses />} />
-              <Route path="/cursos/:id" element={<CourseDetail />} />
-
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/nuevo"
-                element={
-                  <ProtectedRoute>
-                    <ArticleEditor />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/editar/:id"
-                element={
-                  <ProtectedRoute>
-                    <ArticleEditor />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </Suspense>
-          <Footer />
-        </div>
+        <MainLayoutContent />
       </Router>
     </AuthProvider>
   );

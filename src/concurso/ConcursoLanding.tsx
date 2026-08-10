@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
+import { HeaderConcurso } from './components/HeaderConcurso';
 import { HeroConcurso } from './components/HeroConcurso';
 import { PremiosConcurso } from './components/PremiosConcurso';
 import { CoberturaConcurso } from './components/CoberturaConcurso';
 import { FormularioConcurso } from './components/FormularioConcurso';
+import { MenoresEdadSection } from './components/MenoresEdadSection';
 import { BasesConcurso } from './components/BasesConcurso';
 
 const ConcursoLanding: React.FC = () => {
@@ -31,13 +33,17 @@ const ConcursoLanding: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-[#08080A] text-white selection:bg-[#FF4D2E] selection:text-white">
-      <HeroConcurso onInscribirseClick={scrollToInscripcion} />
-      <PremiosConcurso />
-      <CoberturaConcurso />
-      <FormularioConcurso />
-      <BasesConcurso />
-    </main>
+    <div className="min-h-screen bg-[#08080A] text-white selection:bg-[#FF4D2E] selection:text-white">
+      <HeaderConcurso />
+      <main>
+        <HeroConcurso onInscribirseClick={scrollToInscripcion} />
+        <PremiosConcurso />
+        <CoberturaConcurso />
+        <FormularioConcurso />
+        <MenoresEdadSection />
+        <BasesConcurso />
+      </main>
+    </div>
   );
 };
 
