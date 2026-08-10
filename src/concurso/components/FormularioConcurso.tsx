@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { ExternalLink, Sparkles, Trophy, FileText, CheckCircle2, Zap } from 'lucide-react';
+import { ExternalLink, Sparkles, Trophy, FileText, CheckCircle2, Zap, MessageCircle } from 'lucide-react';
+import { CONTACT_INFO } from '../../../constants';
 
 export const FormularioConcurso: React.FC = () => {
   const FORM_PRINCIPAL_URL = 'https://docs.google.com/forms/d/17Ichoen3QouyWjCVDhAuQYBmoyejWV_7Poc4U-RWnF0/viewform';
+  const WHATSAPP_PREMIUM_URL = `https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(
+    'Hola Artist Pro, quiero solicitar mi inscripción en la Modalidad PREMIUM ($50.000 COP) para el concurso Artistas & Talentos 2026. Por favor envíenme los datos de pago para Daviplata/Nequi/Bancolombia.'
+  )}`;
 
   const [embedForm, setEmbedForm] = useState(false);
 
@@ -25,7 +29,7 @@ export const FormularioConcurso: React.FC = () => {
           </h2>
           
           <p className="text-gray-300 text-base sm:text-lg">
-            Selecciona la modalidad de participación que prefieras. Las inscripciones se gestionan de forma segura a través de Google Forms.
+            Selecciona la modalidad de participación que prefieras.
           </p>
         </div>
 
@@ -96,11 +100,11 @@ export const FormularioConcurso: React.FC = () => {
                 Inscripción Premium
               </h3>
 
-              <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
                 Obtén retroalimentación profesional de tu canción y beneficios exclusivos de formación musical.
               </p>
 
-              <ul className="space-y-3 mb-8 text-xs sm:text-sm text-gray-300">
+              <ul className="space-y-3 mb-6 text-xs sm:text-sm text-gray-300">
                 <li className="flex items-center gap-2">
                   <Zap className="w-4 h-4 text-[#FFB800]" />
                   <strong className="text-white font-semibold">Análisis PDF detallado</strong> de tu propuesta por el equipo de Artist Pro
@@ -114,16 +118,20 @@ export const FormularioConcurso: React.FC = () => {
                   <span>15% Dcto. en servicios de estudio + 20% Dcto. en Cursos</span>
                 </li>
               </ul>
+
+              <div className="bg-[#121218] border border-gray-800 p-3.5 rounded-2xl mb-6 text-[11px] text-gray-400">
+                💬 <strong className="text-[#FFB800]">Proceso de Pago:</strong> Al hacer clic abajo te enviaremos los datos de Daviplata/Nequi vía WhatsApp. Al enviar el comprobante recibes tu formulario Premium.
+              </div>
             </div>
 
             <a
-              href={FORM_PRINCIPAL_URL}
+              href={WHATSAPP_PREMIUM_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-4 bg-gradient-to-r from-[#FFB800] to-[#FF8C33] text-black font-extrabold text-sm uppercase tracking-wider rounded-2xl shadow-lg shadow-[#FFB800]/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-3 text-center"
+              className="w-full py-4 bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white font-extrabold text-sm uppercase tracking-wider rounded-2xl shadow-lg shadow-[#25D366]/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-3 text-center"
             >
-              <Trophy className="w-4 h-4" />
-              <span>INSCRIPCIÓN PREMIUM (GOOGLE FORMS)</span>
+              <MessageCircle className="w-5 h-5 fill-white" />
+              <span>SOLICITAR DATOS DE PAGO VÍA WHATSAPP</span>
               <ExternalLink className="w-4 h-4" />
             </a>
           </div>
@@ -137,7 +145,7 @@ export const FormularioConcurso: React.FC = () => {
             className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#14141E] border border-gray-800 text-gray-300 text-xs font-bold hover:text-white hover:border-[#FF4D2E]/40 transition-all"
           >
             <FileText className="w-4 h-4 text-[#FF4D2E]" />
-            <span>{embedForm ? 'Ocultar Formulario Integrado' : 'Ver Formulario Directamente en la Página'}</span>
+            <span>{embedForm ? 'Ocultar Formulario Integrado' : 'Ver Formulario Gratuito Directamente en la Página'}</span>
           </button>
         </div>
 
@@ -145,7 +153,7 @@ export const FormularioConcurso: React.FC = () => {
         {embedForm && (
           <div className="mt-8 rounded-3xl overflow-hidden border-2 border-gray-800 bg-white shadow-2xl animate-in fade-in duration-500">
             <div className="bg-[#121218] p-4 text-white text-xs font-bold flex items-center justify-between">
-              <span>Formulario Oficial de Inscripción (Google Forms)</span>
+              <span>Formulario Oficial de Inscripción Libre (Google Forms)</span>
               <a
                 href={FORM_PRINCIPAL_URL}
                 target="_blank"
