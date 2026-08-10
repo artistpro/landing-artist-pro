@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ChevronDown, HelpCircle, FileText, Download, ShieldCheck, Calendar, Sparkles } from 'lucide-react';
+import { ChevronDown, HelpCircle, FileText, Clock, ShieldCheck, Calendar, Sparkles, AlertCircle } from 'lucide-react';
 import { FAQS_CONCURSO, CATEGORIAS_CONCURSO, CRONOGRAMA_EVENTO } from '../data';
 
 export const BasesConcurso: React.FC = () => {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const [activeAlert, setActiveAlert] = useState<string | null>(null);
 
   const toggle = (idx: number) => {
     setOpenIdx(openIdx === idx ? null : idx);
@@ -11,21 +12,25 @@ export const BasesConcurso: React.FC = () => {
 
   const PDF_DOCS = [
     {
+      id: 'bases',
       titulo: 'Bases, Términos y Condiciones',
-      archivo: '/concurso/documentosconcurso/Bases%20Terminos%20y%20Condiciones.pdf',
       desc: 'Reglamento oficial del concurso, requisitos y jurados.',
     },
     {
+      id: 'datos',
       titulo: 'Aviso de Tratamiento de Datos',
-      archivo: '/concurso/documentosconcurso/Aviso%20Tratamiento%20Datos%20Personales.pdf',
-      desc: 'Política de privacidad y protección de datos (Ley 1581).',
+      desc: 'Política de privacidad y protección de datos (Ley 1581 de 2012).',
     },
     {
+      id: 'cronograma',
       titulo: 'Plan Operativo y Cronograma',
-      archivo: '/concurso/documentosconcurso/Plan%20Operativo%20y%20Cronograma%20Detallado.pdf',
       desc: 'Fases, fechas clave y desarrollo del evento.',
     },
   ];
+
+  const handlePdfClick = (titulo: string) => {
+    setActiveAlert(`El documento "${titulo}" estará disponible públicamente muy pronto. ¡Próximamente!`);
+  };
 
   return (
     <section id="bases" className="py-24 bg-[#0A0A0E] relative border-t border-gray-900 overflow-hidden">
@@ -105,25 +110,40 @@ export const BasesConcurso: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Documentos PDF Descargables */}
+        {/* 3. Documentos PDF (Próximamente) */}
         <div className="space-y-8 border-t border-gray-800/80 pt-16">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <h3 className="text-2xl font-black text-white uppercase">
               DOCUMENTOS &amp; REGLAMENTOS OFICIALES (PDF)
             </h3>
             <p className="text-gray-400 text-xs">
-              Descarga los documentos oficiales para conocer todos los detalles normativos de la convocatoria.
+              Los documentos oficiales estarán disponibles para descarga pública muy pronto.
             </p>
           </div>
+
+          {/* Active Alert Toast Notification */}
+          {activeAlert && (
+            <div className="max-w-xl mx-auto bg-[#1A1A26] border border-[#FFB800] rounded-2xl p-4 text-center flex items-center justify-center gap-3 text-xs sm:text-sm font-bold text-[#F4E8C1] animate-in fade-in duration-300">
+              <AlertCircle className="w-5 h-5 text-[#FFB800] flex-shrink-0" />
+              <span>{activeAlert}</span>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PDF_DOCS.map((doc) => (
               <div
-                key={doc.titulo}
-                className="bg-[#14141C] border border-gray-800 rounded-2xl p-6 flex flex-col justify-between hover:border-[#FF4D2E]/50 transition-all"
+                key={doc.id}
+                className="bg-[#14141C] border border-gray-800 rounded-2xl p-6 flex flex-col justify-between hover:border-[#FFB800]/50 transition-all"
               >
                 <div>
-                  <FileText className="w-8 h-8 text-[#FF4D2E] mb-3" />
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <FileText className="w-8 h-8 text-[#FF4D2E]" />
+                    <span className="bg-[#FFB800]/20 text-[#FFB800] border border-[#FFB800]/40 text-[10px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      Próximamente
+                    </span>
+                  </div>
+                  
                   <h4 className="text-base font-bold text-white mb-1">
                     {doc.titulo}
                   </h4>
@@ -132,16 +152,14 @@ export const BasesConcurso: React.FC = () => {
                   </p>
                 </div>
 
-                <a
-                  href={doc.archivo}
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-[#1C1C28] hover:bg-[#FF4D2E] text-gray-300 hover:text-white rounded-xl text-xs font-bold transition-colors"
+                <button
+                  type="button"
+                  onClick={() => handlePdfClick(doc.titulo)}
+                  className="inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-[#1C1C28] hover:bg-[#1A1A24] text-gray-400 hover:text-[#FFB800] rounded-xl text-xs font-bold transition-colors border border-gray-800 hover:border-[#FFB800]/50"
                 >
-                  <Download className="w-4 h-4" />
-                  <span>Descargar PDF</span>
-                </a>
+                  <Clock className="w-4 h-4 text-[#FFB800]" />
+                  <span>Próximamente (Descargar PDF)</span>
+                </button>
               </div>
             ))}
           </div>
