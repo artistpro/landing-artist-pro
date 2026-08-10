@@ -102,21 +102,30 @@ export const DirectorioMusicos: React.FC<DirectorioMusicosProps> = ({ musicos, o
                 {m.bio}
               </p>
 
-              {/* Instruments & Genres Tags */}
+              {/* Multi-Instrumentalist Tags Grid */}
               <div className="space-y-2 mb-6">
-                <div className="flex flex-wrap gap-1.5">
-                  {m.instrumentos.slice(0, 3).map((inst) => (
-                    <span key={inst} className="bg-[#141A24] text-emerald-300 text-[11px] font-medium px-2.5 py-1 rounded-lg border border-emerald-900/40">
-                      {inst}
-                    </span>
-                  ))}
+                <div>
+                  <span className="text-[10px] text-gray-400 font-bold uppercase block mb-1">
+                    Instrumentos ({m.instrumentos.length}):
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {m.instrumentos.map((inst) => (
+                      <span key={inst} className="bg-[#141A24] text-emerald-300 text-[11px] font-medium px-2.5 py-1 rounded-lg border border-emerald-900/40 flex items-center gap-1">
+                        <Music className="w-3 h-3 text-amber-400" />
+                        {inst}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-1">
-                  {m.generos.slice(0, 2).map((g) => (
-                    <span key={g} className="bg-[#12161F] text-gray-400 text-[10px] font-medium px-2 py-0.5 rounded-md">
-                      {g}
-                    </span>
-                  ))}
+
+                <div className="pt-1">
+                  <div className="flex flex-wrap gap-1">
+                    {m.generos.map((g) => (
+                      <span key={g} className="bg-[#12161F] text-gray-400 text-[10px] font-medium px-2 py-0.5 rounded-md">
+                        {g}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

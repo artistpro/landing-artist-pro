@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Send, User, MapPin, Phone, Link as LinkIcon, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, Send, User, MapPin, Phone, Link as LinkIcon, Sparkles, CheckCircle2, Music, Tag } from 'lucide-react';
 import { DEPARTAMENTOS_LIST, TERRITORIO_DANE, GENEROS_LIST, INSTRUMENTOS_LIST } from '../data/territorioData';
 import { DepartamentoRegion, TipoMusico } from '../types';
 import { createMusico } from '../lib/musicosService';
@@ -19,7 +19,7 @@ export const FormularioRegistroColectivo: React.FC<FormularioRegistroColectivoPr
     nombreArtistico: '',
     tipo: 'Solista' as TipoMusico,
     generos: [GENEROS_LIST[0]],
-    instrumentos: [INSTRUMENTOS_LIST[0]],
+    instrumentos: [INSTRUMENTOS_LIST[0], INSTRUMENTOS_LIST[1]],
     departamento: 'Risaralda' as DepartamentoRegion,
     municipio: 'Pereira',
     corregimiento: 'Pereira (Cabecera)',
@@ -46,6 +46,30 @@ export const FormularioRegistroColectivo: React.FC<FormularioRegistroColectivoPr
 
   const handleChange = (field: string, val: any) => {
     setFormData((prev) => ({ ...prev, [field]: val }));
+  };
+
+  const handleToggleInstrumento = (inst: string) => {
+    setFormData((prev) => {
+      const exists = prev.instrumentos.includes(inst);
+      if (exists) {
+        if (prev.instrumentos.length === 1) return prev; // Keep at least one
+        return { ...prev, instrumentos: prev.instrumentos.filter((i) => i !== inst) };
+      } else {
+        return { ...prev, instrumentos: [...prev.instrumentos, inst] };
+      }
+    });
+  };
+
+  const handleToggleGenero = (g: string) => {
+    setFormData((prev) => {
+      const exists = prev.generos.includes(g);
+      if (exists) {
+        if (prev.generos.length === 1) return prev; // Keep at least one
+        return { ...prev, generos: prev.generos.filter((item) => item !== g) };
+      } else {
+        return { ...prev, generos: [...prev.generos, g] };
+      }
+    });
   };
 
   const handleDeptChange = (dept: DepartamentoRegion) => {
@@ -155,7 +179,7 @@ export const FormularioRegistroColectivo: React.FC<FormularioRegistroColectivoPr
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label className="text-gray-300 text-xs font-bold uppercase block mb-1">
-                  Nombre Artístico / Banda *
+                  Nombre Artístico / Solista / Banda *
                 </label>
                 <div className="relative">
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -164,7 +188,7 @@ export const FormularioRegistroColectivo: React.FC<FormularioRegistroColectivoPr
                     required
                     value={formData.nombreArtistico}
                     onChange={(e) => handleChange('nombreArtistico', e.target.value)}
-                    placeholder="Ej. Mateo & La Sombra"
+                    placeholder="Ej. Mateo & La Sombra, Orquesta La Cafetera, etc."
                     className="w-full bg-[#141A24] border border-gray-800 rounded-xl pl-10 pr-3 py-3 text-white text-xs font-medium focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
@@ -188,7 +212,71 @@ export const FormularioRegistroColectivo: React.FC<FormularioRegistroColectivoPr
               </div>
             </div>
 
-            {/* Step 2: Desplegables Territorial DANE Chained */}
+            {/* Step 2: Multi-Instrumentalist Selection Grid */}
+            <div className="p-4 rounded-2xl bg-[#121822] border border-emerald-900/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 uppercase">
+                  <Music className="w-4 h-4 text-amber-400" />
+                  <span>Instrumentos que ejecutas (Multi-Instrumentista) *</span>
+                </div>
+                <span className="text-[10px] text-gray-400">Puedes seleccionar varios</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pt-1">
+                {INSTRUMENTOS_LIST.map((inst) => {
+                  const isSelected = formData.instrumentos.includes(inst);
+                  return (
+                    <button
+                      type="button"
+                      key={inst}
+                      onClick={() => handleToggleInstrumento(inst)}
+                      className={`px-3 py-2 rounded-xl text-xs font-semibold text-left transition-all border flex items-center justify-between ${
+                        isSelected
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-md'
+                          : 'bg-[#18202C] text-gray-400 border-gray-800 hover:border-gray-700 hover:text-gray-200'
+                      }`}
+                    >
+                      <span className="truncate">{inst}</span>
+                      {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Step 3: Multi-Genre Selection */}
+            <div className="p-4 rounded-2xl bg-[#121822] border border-emerald-900/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-bold text-amber-300 uppercase">
+                  <Tag className="w-4 h-4 text-emerald-400" />
+                  <span>Géneros Musicales *</span>
+                </div>
+                <span className="text-[10px] text-gray-400">Selecciona los géneros que abordas</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pt-1">
+                {GENEROS_LIST.map((g) => {
+                  const isSelected = formData.generos.includes(g);
+                  return (
+                    <button
+                      type="button"
+                      key={g}
+                      onClick={() => handleToggleGenero(g)}
+                      className={`px-3 py-2 rounded-xl text-xs font-semibold text-left transition-all border flex items-center justify-between ${
+                        isSelected
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-md'
+                          : 'bg-[#18202C] text-gray-400 border-gray-800 hover:border-gray-700 hover:text-gray-200'
+                      }`}
+                    >
+                      <span className="truncate">{g}</span>
+                      {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0 ml-1" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Step 4: Desplegables Territorial DANE Chained */}
             <div className="p-4 rounded-2xl bg-[#121822] border border-emerald-900/40 space-y-4">
               <div className="flex items-center gap-2 text-xs font-bold text-amber-300 uppercase">
                 <MapPin className="w-4 h-4 text-emerald-400" />
@@ -255,44 +343,7 @@ export const FormularioRegistroColectivo: React.FC<FormularioRegistroColectivoPr
               </div>
             </div>
 
-            {/* Step 3: Géneros e Instrumentos */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label className="text-gray-300 text-xs font-bold uppercase block mb-1">
-                  Instrumento Principal *
-                </label>
-                <select
-                  value={formData.instrumentos[0]}
-                  onChange={(e) => handleChange('instrumentos', [e.target.value])}
-                  className="w-full bg-[#141A24] border border-gray-800 rounded-xl px-3 py-3 text-white text-xs font-medium focus:border-emerald-500 focus:outline-none cursor-pointer"
-                >
-                  {INSTRUMENTOS_LIST.map((inst) => (
-                    <option key={inst} value={inst}>
-                      {inst}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-gray-300 text-xs font-bold uppercase block mb-1">
-                  Género Musical Principal *
-                </label>
-                <select
-                  value={formData.generos[0]}
-                  onChange={(e) => handleChange('generos', [e.target.value])}
-                  className="w-full bg-[#141A24] border border-gray-800 rounded-xl px-3 py-3 text-white text-xs font-medium focus:border-emerald-500 focus:outline-none cursor-pointer"
-                >
-                  {GENEROS_LIST.map((g) => (
-                    <option key={g} value={g}>
-                      {g}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Step 4: Contact & Bio */}
+            {/* Step 5: Contact & Bio */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label className="text-gray-300 text-xs font-bold uppercase block mb-1">
@@ -337,7 +388,7 @@ export const FormularioRegistroColectivo: React.FC<FormularioRegistroColectivoPr
                 rows={3}
                 value={formData.bio}
                 onChange={(e) => handleChange('bio', e.target.value)}
-                placeholder="Cuenta brevemente sobre tu trayectoria musical, experiencia y estilo..."
+                placeholder="Cuenta brevemente sobre tu trayectoria musical, los instrumentos que ejecutas y tu experiencia..."
                 className="w-full bg-[#141A24] border border-gray-800 rounded-xl p-3 text-white text-xs font-medium focus:border-emerald-500 focus:outline-none"
               />
             </div>
