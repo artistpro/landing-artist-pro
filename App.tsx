@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -9,9 +9,7 @@ import RadioSection from './components/RadioSection';
 import Gallery from './components/Gallery';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-import ConcursoLanding from './src/concurso/ConcursoLanding';
 import ColectivoLanding from './src/colectivo-pro/ColectivoLanding';
-import { ContestBanner } from './components/ContestBanner';
 
 // Lazy loaded page components for optimal performance & fast initial load
 const Courses = lazy(() => import('./src/pages/Courses'));
@@ -55,21 +53,17 @@ function Home() {
 
 function MainLayoutContent() {
   const location = useLocation();
-  const isStandalonePage = location.pathname === '/concurso' || location.pathname === '/colectivo-pro';
+  const isStandalonePage = location.pathname === '/colectivo-pro';
 
   return (
     <div className="min-h-screen bg-[#030712] text-white selection:bg-primary selection:text-white">
-      {!isStandalonePage && (
-        <>
-          <ContestBanner />
-          <Navbar />
-        </>
-      )}
+      {!isStandalonePage && <Navbar />}
 
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/concurso" element={<ConcursoLanding />} />
+          {/* Contest route suspended - redirects safely to Home */}
+          <Route path="/concurso" element={<Navigate to="/" replace />} />
           <Route path="/colectivo-pro" element={<ColectivoLanding />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
