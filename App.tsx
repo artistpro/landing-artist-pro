@@ -10,6 +10,7 @@ import Gallery from './components/Gallery';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import ColectivoLanding from './src/colectivo-pro/ColectivoLanding';
+import AppsLanding from './src/apps/AppsLanding';
 
 // Lazy loaded page components for optimal performance & fast initial load
 const Courses = lazy(() => import('./src/pages/Courses'));
@@ -53,7 +54,7 @@ function Home() {
 
 function MainLayoutContent() {
   const location = useLocation();
-  const isStandalonePage = location.pathname === '/colectivo-pro';
+  const isStandalonePage = location.pathname === '/colectivo-pro' || location.pathname === '/apps';
 
   return (
     <div className="min-h-screen bg-[#030712] text-white selection:bg-primary selection:text-white">
@@ -65,6 +66,7 @@ function MainLayoutContent() {
           {/* Contest route suspended - redirects safely to Home */}
           <Route path="/concurso" element={<Navigate to="/" replace />} />
           <Route path="/colectivo-pro" element={<ColectivoLanding />} />
+          <Route path="/apps" element={<AppsLanding />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/cursos" element={<Courses />} />
