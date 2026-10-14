@@ -4,15 +4,25 @@ Este documento sirve como registro oficial y punto de control para retomar los p
 
 ---
 
-## 📌 Estado Actual del Proyecto (al 14 de Agosto de 2026)
+## 📌 Estado Actual del Proyecto (al 14 de Octubre de 2026)
 
 - **Sitio Principal (`www.artistpro.co`)**: Activo y funcionando normalmente.
+- **Suite de Apps & APKs (`/apps`)**: **ACTIVO Y PUBLICADO**. Landing independiente con catálogo de utilidades móviles (Scanner PDF y Teleprompter Flotante) con descarga y soporte de permisos.
 - **Concurso Artistas & Talentos 2026 (`/concurso`)**: **SUSPENDIDO TEMPORALMENTE**. El banner promocional superior se retiró y la ruta `/concurso` redirige automáticamente al inicio (`/`). Todo el código, diseño y configuración de formularios sigue preservado 100% intacto en `src/concurso/`.
 - **Colectivo Artist Pro (`/colectivo-pro`)**: **ACTIVO Y PUBLICADO**. La red y directorio de músicos de la región con los 613 municipios/corregimientos DANE está 100% funcional.
 
 ---
 
 ## 📅 Historial Cronológico de Cambios y Versiones
+
+### 📅 14 de Octubre de 2026
+- **Lanzamiento de la Landing de Apps (`/apps`)**:
+  - `src/apps/AppsLanding.tsx`: Página independiente para utilidades móviles Android de Artist Pro.
+  - `src/apps/components/AppCard.tsx`: Tarjetas de descarga con iconos 3D de alta definición, badges de versión y tamaño.
+  - `src/apps/components/InstallationModal.tsx`: Guía interactiva con pestañas para saltar advertencias de instalación en Android y configurar el permiso especial de superposición (mostrar sobre otras apps para el Teleprompter).
+  - `src/apps/data/appsData.ts`: Catálogo de aplicaciones (`Scanner_ArtistPro` y `Teleprompter_ArtistPro`).
+  - `App.tsx`: Registro de la ruta aislada `/apps`.
+  - Commit: `2b7b43b`.
 
 ### 📅 14 de Agosto de 2026
 - **Suspensión Temporal del Concurso**:
